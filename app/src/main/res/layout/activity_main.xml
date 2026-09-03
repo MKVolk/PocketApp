@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@drawable/rounded_ui"
+        android:backgroundTint="#D3D3D3">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text= "@string/main_title"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/main_folder_title"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/folderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No folder selected"
+            android:padding="12dp"
+            android:background="@drawable/rounded_ui"
+            android:backgroundTint="#FF9191"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <Button
+            android:id="@+id/selectFolderButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_folder_select" />
+
+        <TextView
+            android:id="@+id/portText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Server port: 8080"
+            android:textSize="16sp"
+            android:layout_marginTop="24dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/startButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Start Server"
+                android:layout_marginTop="16dp"
+                android:background="#A2FFB0"
+                android:padding="16dp"
+
+                />
+
+            <Button
+                android:id="@+id/stopButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stop Server"
+                android:layout_marginTop="16dp"
+                android:background="#FFCCCC"
+                android:padding="16dp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Status: Stopped"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp" />
+
+        <TextView
+            android:id="@+id/urlText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="URL: —"
+            android:textSize="16sp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp" />
+
+        <Button
+            android:id="@+id/qrButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_QR_show" />
+
+        <ImageView
+            android:id="@+id/image_show"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:contentDescription="Mascot"
+            android:src="@drawable/arf"
+            android:backgroundTint="#ffffff"
+            android:background="@drawable/rounded_ui"
+            android:layout_marginTop="6dp">
+        </ImageView>
+
+    </LinearLayout>
+
+</ScrollView>

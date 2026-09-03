@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pocket Server</string>
+    <string name="main_title">Local Web Server</string>
+    <string name="main_folder_title">Website folder</string>
+    <string name="main_folder_select">Select Website Folder</string>
+    <string name="main_QR_show">Show QR Code</string>
+    <string name="main_start">Start</string>
+    <string name="main_stop">Stop</string>
+</resources>

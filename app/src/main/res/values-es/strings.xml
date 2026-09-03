@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pocket Server</string>
+    <string name="main_title">Servidor Web Local</string>
+    <string name="main_folder_title">Carpeta del servidor</string>
+    <string name="main_folder_select">Seleccionar Carpeta del servidor</string>
+    <string name="main_QR_show">Mostrar Código QR</string>
+    <string name="main_start">Iniciar</string>
+    <string name="main_stop">Detener</string>
+</resources>
