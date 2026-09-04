@@ -64,11 +64,10 @@ class MainActivity : AppCompatActivity() {
 
             selectedFolderUri = uri
 
+            // Save URI to Preferences
             getPreferences().edit()
                 .putString(PREF_FOLDER_URI,uri.toString())
                 .apply()
-
-            folderText.text =  "Folder: " + getFolderName( uri ) + "/"
 
             Toast.makeText(
                 this,
@@ -76,6 +75,8 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
 
+            // Change UI select folder
+            folderText.text =  "Folder: " + getFolderName( uri ) + "/"
             folderText.backgroundTintList = ColorStateList.valueOf(("#D1FFFB".toColorInt()))
 
         }
@@ -116,7 +117,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.qrButton
             )
 
+        //Setup Saved data
         loadSavedFolder()
+        loadServerState()
 
         requestNotificationPermission()
 
@@ -143,11 +146,20 @@ class MainActivity : AppCompatActivity() {
 
                 return@setOnClickListener
             }
+            //Change server_state to start
+            getPreferences().edit()
+                .putString("server_state","start")
+                .apply()
 
             startServer()
         }
 
         stopButton.setOnClickListener {
+            //Change server_state to stop
+            getPreferences().edit()
+                .putString("server_state","stop")
+                .apply()
+
             stopServer()
         }
 
@@ -191,6 +203,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadSavedFolder() {
 
+        //Fetch folder_uri from preferences
         val saved = getPreferences()
                 .getString( PREF_FOLDER_URI, null)
 
@@ -200,6 +213,7 @@ class MainActivity : AppCompatActivity() {
                 selectedFolderUri =
                     Uri.parse(saved)
 
+                // Change UI
                 folderText.text = getFolderName(selectedFolderUri)
                 folderText.backgroundTintList = ColorStateList.valueOf(("#D1FFFB".toColorInt()))
 
@@ -208,6 +222,29 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun loadServerState(){
+
+        //Fetch server_state from saved preferences
+        val state = getPreferences()
+            .getString( "server_state", null)
+
+        if (state != null) {
+
+            try {
+
+                if(state == "start"){
+                    changeUIStart()
+                }else{
+                    changeUIStop()
+                }
+
+
+            } catch (_: Exception) {
+                //This means its first time opening the app
+            }
+        }
     }
 
     private fun requestNotificationPermission() {
@@ -242,9 +279,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun startServer() {
 
+        //Get URI
         val uri = selectedFolderUri
             ?: return
 
+        // Start Server
         val intent =
             Intent( this, StaticServerService::class.java
             ).apply {
@@ -256,15 +295,17 @@ class MainActivity : AppCompatActivity() {
 
         ContextCompat.startForegroundService(this,intent)
 
+        changeUIStart()
+
+        /*
+        // Change UI
         statusText.text = "Status: Running"
-
         updateUrl()
-
         displayQrCode()
 
         val container = findViewById<LinearLayout>(R.id.main_container)
         container.backgroundTintList = ColorStateList.valueOf(("#C8FFF2".toColorInt()))
-
+        */
     }
 
     private fun stopServer() {
@@ -275,16 +316,18 @@ class MainActivity : AppCompatActivity() {
 
         startService(intent)
 
+        changeUIStop()
+        /*
+        // Change UI
         statusText.text = "Status: Stopped"
         urlText.text = "URL: —"
 
-        //Embed dawg in the viewer
         val imageViewEmbed = findViewById<ImageView>(R.id.image_show)
         imageViewEmbed.setImageResource(R.drawable.arf)
 
         val container = findViewById<LinearLayout>(R.id.main_container)
         container.backgroundTintList = ColorStateList.valueOf(("#D3D3D3".toColorInt()))
-
+        */
     }
 
 
@@ -468,6 +511,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         return bitmap
+    }
+
+    private fun changeUIStop(){
+        statusText.text = "Status: Stopped"
+        urlText.text = "URL: —"
+
+        val imageViewEmbed = findViewById<ImageView>(R.id.image_show)
+        imageViewEmbed.setImageResource(R.drawable.arf)
+
+        val container = findViewById<LinearLayout>(R.id.main_container)
+        container.backgroundTintList = ColorStateList.valueOf(("#D3D3D3".toColorInt()))
+    }
+
+    private fun changeUIStart(){
+        statusText.text = "Status: Running"
+        updateUrl()
+        displayQrCode()
+
+        val container = findViewById<LinearLayout>(R.id.main_container)
+        container.backgroundTintList = ColorStateList.valueOf(("#C8FFF2".toColorInt()))
+
+        //TODO: Show the URL
     }
 
     override fun onDestroy() {
