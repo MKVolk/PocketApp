@@ -11,4 +11,5 @@
     <string name="main_mobile_data">Mobile data is ON</string>
     <string name="main_info_title">App info</string>
     <string name="main_info_close">Close</string>
+    <string name="main_info_text">Open source app :3</string>
 </resources>

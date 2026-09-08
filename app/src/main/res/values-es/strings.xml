@@ -11,4 +11,5 @@
     <string name="main_mobile_data">Los Datos Móbiles están activados</string>
     <string name="main_info_title">Información de la App</string>
     <string name="main_info_close">Cerrar</string>
+    <string name="main_info_text">Aplicación de código abierto :3</string>
 </resources>

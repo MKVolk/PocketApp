@@ -527,15 +527,37 @@ class MainActivity : AppCompatActivity() {
 
         val infoText =
             TextView(this).apply {
-                text = R.string.main_info_text.toString()
+                text = getString(R.string.main_info_text)
                 textSize = 16f
                 setPadding(16,0,16,16)
             }
+
+        val urlText =
+            TextView(this).apply {
+                text = "Github Repository"
+                textSize = 16f
+                setPadding(16, 0, 16, 16)
+                setTextColor(Color.BLUE)
+                setOnClickListener {
+                    startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/MKVolk/PocketApp"))
+                    )
+                }
+            }
+
 
         container.addView(
             infoText,
             LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+        container.addView(
+            urlText,
+            LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
         )
