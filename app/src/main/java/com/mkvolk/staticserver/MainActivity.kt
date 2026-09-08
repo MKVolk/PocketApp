@@ -23,6 +23,11 @@ import java.net.Inet4Address
 import java.net.NetworkInterface
 import androidx.core.graphics.toColorInt
 import android.graphics.Color
+import android.telephony.TelephonyManager
+import android.view.View
+import android.widget.Button
+import androidx.annotation.RequiresPermission
+import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         private const val PORT = 8080
     }
 
+    private lateinit var dataText: TextView
+    private lateinit var hotSpotText: TextView
     private lateinit var folderText: TextView
     private lateinit var statusText: TextView
     private lateinit var urlText: TextView
@@ -88,7 +95,8 @@ class MainActivity : AppCompatActivity() {
             // Nothing else required.
         }
 
-    override fun onCreate( savedInstanceState: Bundle? ) {
+    @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
+    override fun onCreate(savedInstanceState: Bundle? ) {
 
         super.onCreate(savedInstanceState)
 
@@ -99,22 +107,30 @@ class MainActivity : AppCompatActivity() {
         statusText = findViewById(R.id.statusText)
         urlText = findViewById(R.id.urlText)
 
+        dataText = findViewById(R.id.main_mobile_data)
+        hotSpotText = findViewById(R.id.main_hotspot)
+
         val selectFolderButton =
-            findViewById<android.widget.Button>(R.id.selectFolderButton)
+            findViewById<Button>(R.id.selectFolderButton)
 
         val startButton =
-            findViewById<android.widget.Button>(
+            findViewById<Button>(
                 R.id.startButton
             )
 
         val stopButton =
-            findViewById<android.widget.Button>(
+            findViewById<Button>(
                 R.id.stopButton
             )
 
         val qrButton =
-            findViewById<android.widget.Button>(
+            findViewById<Button>(
                 R.id.qrButton
+            )
+
+        val infoButton =
+            findViewById<Button>(
+                R.id.main_info_button
             )
 
         //Setup Saved data
@@ -177,6 +193,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             showQrCode()
+        }
+
+        infoButton.setOnClickListener {
+            showInfo()
         }
 
         updateUi()
@@ -337,9 +357,23 @@ class MainActivity : AppCompatActivity() {
             .contains( "Running", ignoreCase = true)
     }
 
+    @RequiresPermission(Manifest.permission.READ_PHONE_STATE)
     private fun updateUi() {
         statusText.text = "Status: Stopped"
         urlText.text = "URL: —"
+
+        //Setup information alerts
+
+        if (isDataEnabled()){
+            dataText.visibility = View.VISIBLE
+        }else{
+            dataText.visibility = View.INVISIBLE
+        }
+        if (!isHotspotEnabled()){
+            hotSpotText.visibility = View.INVISIBLE
+        }else{
+            hotSpotText.visibility = View.VISIBLE
+        }
     }
 
     private fun getLocalIpAddress(): String? {
@@ -483,6 +517,36 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun showInfo() {
+
+        val container =
+            LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(16,16,16,16)
+            }
+
+        val infoText =
+            TextView(this).apply {
+                text = R.string.main_info_text.toString()
+                textSize = 16f
+                setPadding(16,0,16,16)
+            }
+
+        container.addView(
+            infoText,
+            LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+        AlertDialog.Builder(this)
+            .setTitle(R.string.main_info_title)
+            .setView(container)
+            .setPositiveButton(R.string.main_info_close, null)
+            .show()
+    }
+
     private fun generateQrCode(text: String,width: Int,height: Int
     ): Bitmap {
 
@@ -538,6 +602,55 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         // Do nothing when activity is closed
+    }
+
+    private fun isHotspotEnabled(): Boolean {
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as android.net.wifi.WifiManager
+
+        return if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            // getWifiApState() is hidden from the public SDK, so reflection is required.
+            try {
+                val method = wifiManager.javaClass.getDeclaredMethod("getWifiApState")
+                method.isAccessible = true
+
+                val state = method.invoke(wifiManager) as Int
+
+                state == 12 || state == 13
+            } catch (e: Exception) {
+                false
+            }
+        } else {
+            try {
+                val method = wifiManager.javaClass.getDeclaredMethod("isWifiApEnabled")
+                method.isAccessible = true
+                method.invoke(wifiManager) as Boolean
+            } catch (e: Exception) {
+                false
+            }
+        }
+    }
+
+    @RequiresPermission(anyOf = [Manifest.permission.MODIFY_PHONE_STATE, Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.READ_BASIC_PHONE_STATE, Manifest.permission.READ_PHONE_STATE])
+    private fun isDataEnabled(): Boolean {
+        val telephonyManager =
+            getSystemService(TELEPHONY_SERVICE) as TelephonyManager
+
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                telephonyManager.isDataEnabled
+            } catch (e: SecurityException) {
+                false
+            }
+        } else {
+            try {
+                val method =
+                    telephonyManager.javaClass.getDeclaredMethod("getDataEnabled")
+                method.isAccessible = true
+                method.invoke(telephonyManager) as Boolean
+            } catch (e: Exception) {
+                false
+            }
+        }
     }
 
 

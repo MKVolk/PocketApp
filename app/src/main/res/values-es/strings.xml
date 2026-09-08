@@ -7,4 +7,8 @@
     <string name="main_QR_show">Mostrar Código QR</string>
     <string name="main_start">Iniciar</string>
     <string name="main_stop">Detener</string>
+    <string name="main_hotspot">El Punto de Acceso está desactivado</string>
+    <string name="main_mobile_data">Los Datos Móbiles están activados</string>
+    <string name="main_info_title">Información de la App</string>
+    <string name="main_info_close">Cerrar</string>
 </resources>

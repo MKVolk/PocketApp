@@ -7,4 +7,8 @@
     <string name="main_QR_show">Show QR Code</string>
     <string name="main_start">Start</string>
     <string name="main_stop">Stop</string>
+    <string name="main_hotspot">Hotspot is OFF</string>
+    <string name="main_mobile_data">Mobile data is ON</string>
+    <string name="main_info_title">App info</string>
+    <string name="main_info_close">Close</string>
 </resources>

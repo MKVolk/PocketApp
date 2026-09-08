@@ -93,11 +93,7 @@ class StaticServerService : Service() {
             )
 
         } else {
-
-            startForeground(
-                NOTIFICATION_ID,
-                notification
-            )
+            startForeground( NOTIFICATION_ID, notification )
         }
     }
 
@@ -619,3 +615,4 @@ class StaticServerService : Service() {
         return null
     }
 }
+
